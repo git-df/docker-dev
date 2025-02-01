@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   postgres-db:
     image: postgres:latest
@@ -8,7 +6,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: test123
     ports:
-      - "85432:5432"
+      - "55432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     restart: always
@@ -20,7 +18,7 @@ services:
       ACCEPT_EULA: "Y"
       SA_PASSWORD: "test123"
     ports:
-      - "81433:1433"
+      - "51433:1433"
     volumes:
       - mssql_data:/var/opt/mssql
     restart: always
@@ -30,7 +28,7 @@ services:
     container_name: redis-cache
     command: redis-server --requirepass test123
     ports:
-      - "86379:6379"
+      - "56379:6379"
     volumes:
       - redis_data:/data
     restart: always
