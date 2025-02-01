@@ -1,39 +1,74 @@
 services:
-  postgres-db:
-    image: postgres:latest
-    container_name: postgres-db
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: test123
-    ports:
-      - "55432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    restart: always
 
-  mssql-db:
-    image: mcr.microsoft.com/mssql/server:2019-latest
-    container_name: mssql-db
-    environment:
-      ACCEPT_EULA: "Y"
-      SA_PASSWORD: "test123"
+  docker-dev_dbeaver:
+    image: dbeaver/cloudbeaver:22.1.1
+    container_name: docker-dev_dbeaver
+    restart: unless-stopped
     ports:
-      - "51433:1433"
+      - "5550:8978"
+    volumes:
+      - dbeaver_data:/opt/cloudbeaver/workspace
+
+  docker-dev_redis_insight:
+    image: redislabs/redisinsight:1.14.0
+    container_name: docker-dev_redis_insight
+    restart: always
+    ports:
+      - "5551:8001"
+    volumes:
+      - redis_insight_data:/db
+
+  docker-dev_rabbitmq:
+    image: rabbitmq:3-management
+    container_name: docker-dev_rabbitmq
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_PASS: Test123!
+    ports:
+      - "5552:15672"
+      - "5553:5672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    
+  docker-dev_mssql:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: docker-dev_mssql
+    restart: always
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_PID=Express
+      - SA_PASSWORD=Test123!
+    ports:
+      - "5554:1433"
     volumes:
       - mssql_data:/var/opt/mssql
-    restart: always
 
-  redis-cache:
-    image: redis:latest
-    container_name: redis-cache
-    command: redis-server --requirepass test123
+  docker-dev_postgres:
+    image: postgres:latest
+    container_name: docker-dev_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Test123!
     ports:
-      - "56379:6379"
+      - "5555:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  docker-dev_redis:
+    image: redis:latest
+    container_name: docker-dev_redis
+    restart: always
+    command: redis-server --requirepass Test123!
+    ports:
+      - "5556:6379"
     volumes:
       - redis_data:/data
-    restart: always
 
 volumes:
-  postgres_data:
+  dbeaver_data:
+  redis_insight_data:
+  rabbitmq_data:
   mssql_data:
+  postgres_data:
   redis_data:
